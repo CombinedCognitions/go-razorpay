@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/razorpay/razorpay-go"
 )
 
@@ -26,6 +25,16 @@ func CreateOrder(amount int64, currency string, receipt string, payment_capture 
 
 	return body
 
+}
+
+func Getpayment(payment_id string) {
+	fmt.Println("it fucking workd")
+	body, err := razorclient.Payment.Fetch(payment_id, nil, nil)
+	if err != nil {
+		fmt.Println(err)
+
+	}
+	fmt.Println(body)
 }
 
 // // fmt.Println("////////////////////////")
@@ -53,12 +62,13 @@ func GetURL() (string, string) {
 }
 
 func Razor() *razorpay.Client {
-	err := godotenv.Load()
-	if err != nil {
-		log.Panicln(err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Panicln(err)
+	// }
 
-	key, secret := GetURL()
+	key := "rzp_test_wZsCHShozJ8ncL"
+	secret := "CAAzHHQuc2WQn8KgEJygBRpP"
 
 	client := razorpay.NewClient(key, secret)
 

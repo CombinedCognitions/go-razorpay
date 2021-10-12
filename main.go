@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"go-razorpay/routes"
 	"log"
 	"net/http"
@@ -29,6 +30,18 @@ func main() {
 
 	routes.Install(app)
 
-	log.Fatal(app.Listen(":8080"))
+	cer, err := tls.LoadX509KeyPair("tls/cert.pem", "tls/key.pem")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+
+	ln, err := tls.Listen("tcp", ":8080", config)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Fatal(app.Listener(ln))
 
 }

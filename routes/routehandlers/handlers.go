@@ -38,8 +38,7 @@ func VerifyPayment(c *fiber.Ctx) error {
 		fmt.Println(err)
 
 	}
-	_, secret := controllers.GetURL()
-
+	secret := "CAAzHHQuc2WQn8KgEJygBRpP"
 	encode := fmt.Sprintf("%s|%s", data.Order_id, data.Razorpay_payment_id)
 	fmt.Println("input", encode)
 	h := hmac.New(sha256.New, []byte(secret))
@@ -52,7 +51,8 @@ func VerifyPayment(c *fiber.Ctx) error {
 
 	if data.Razorpay_signature == sha {
 
-		fmt.Println("it fucking workd")
+		controllers.Getpayment(data.Razorpay_payment_id)
+
 		// url := "https://jsonplaceholder.typicode.com/todos/1"
 		// res, err := http.Get(url)
 		// if err != nil {
