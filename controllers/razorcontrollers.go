@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/razorpay/razorpay-go"
 )
@@ -48,12 +47,13 @@ func Getpayment(payment_id string) {
 // }
 
 func GetURL() (string, string) {
-	key := os.Getenv("KEY")
+	key := "rzp_live_71WKYXlRb4EnAD"
+
 	if key == "" {
 		log.Fatal("cant get .env key")
 	}
 
-	secret := os.Getenv("SECRET")
+	secret := "gczQo4tJAbSxRu6yupkEcdhL"
 	if secret == "" {
 		log.Fatal("cant get .env Secret")
 	}
@@ -67,8 +67,7 @@ func Razor() *razorpay.Client {
 	// 	log.Panicln(err)
 	// }
 
-	key := "rzp_test_wZsCHShozJ8ncL"
-	secret := "CAAzHHQuc2WQn8KgEJygBRpP"
+	key, secret := GetURL()
 
 	client := razorpay.NewClient(key, secret)
 

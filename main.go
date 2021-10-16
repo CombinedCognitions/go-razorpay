@@ -1,9 +1,11 @@
 package main
 
 import (
-	"crypto/tls"
+	// "crypto/tls"
+	"go-razorpay/db/dbcontrollers"
 	"go-razorpay/routes"
-	"log"
+
+	// "log"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,6 +15,7 @@ import (
 )
 
 func main() {
+
 	app := fiber.New()
 
 	app.Use(logger.New())
@@ -30,18 +33,22 @@ func main() {
 
 	routes.Install(app)
 
-	cer, err := tls.LoadX509KeyPair("tls/cert.pem", "tls/key.pem")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// cer, err := tls.LoadX509KeyPair("tls/cert.pem", "tls/key.pem")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+	// config := &tls.Config{Certificates: []tls.Certificate{cer}}
 
-	ln, err := tls.Listen("tcp", ":8080", config)
-	if err != nil {
-		panic(err)
-	}
+	// ln, err := tls.Listen("tcp", ":8080", config)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	log.Fatal(app.Listener(ln))
+	//log.Fatal(app.Listener(ln))
+
+	app.Listen(":8080")
+
+	defer dbcontrollers.Close()
 
 }

@@ -6,7 +6,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"go-razorpay/controllers"
+	"go-razorpay/db/dbcontrollers"
 	"go-razorpay/models"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,12 +35,12 @@ func VerifyPayment(c *fiber.Ctx) error {
 	var data models.VerficationData
 
 	err := c.BodyParser(&data)
-	fmt.Println("from frontend", data.Order_id)
+	fmt.Println("from frontend", data.Name, data.Amount)
 	if err != nil {
 		fmt.Println(err)
 
 	}
-	secret := "CAAzHHQuc2WQn8KgEJygBRpP"
+	_, secret := controllers.GetURL()
 	encode := fmt.Sprintf("%s|%s", data.Order_id, data.Razorpay_payment_id)
 	fmt.Println("input", encode)
 	h := hmac.New(sha256.New, []byte(secret))
@@ -53,22 +55,32 @@ func VerifyPayment(c *fiber.Ctx) error {
 
 		controllers.Getpayment(data.Razorpay_payment_id)
 
-		// url := "https://jsonplaceholder.typicode.com/todos/1"
-		// res, err := http.Get(url)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
+		var donator models.Donator
+		donator.Name = data.Name
+		donator.Amount = data.Amount
+		donator.Time = time.Now()
 
-		// data, _ := ioutil.ReadAll(res.Body)
-		// res.Body.Close()
-		// var parser models.User
-		// c.BodyParser(res.Body)
+		err = dbcontrollers.Save(&donator)
+		if err != nil {
+			panic(err)
 
-		// fmt.Printf("%s, body:%s", data, parse)
+		}
+
 		return c.JSON(fiber.Map{"status": "payment-sucess"})
 
 	}
 
 	return c.JSON(fiber.Map{"status": "failed"})
+
+}
+
+func GetallDonators(c *fiber.Ctx) error {
+
+	fmt.Println("geting all donations")
+	var donors []models.Donator
+	donors = dbcontrollers.GetAllDonators()
+	fmt.Println(donors)
+
+	return c.JSON(fiber.Map{"donorlist": donors})
 
 }

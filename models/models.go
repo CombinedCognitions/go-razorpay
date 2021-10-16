@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Dataforid struct {
 	Name     string `json:"name" `
 	Amount   int64  `json:"amount"`
@@ -12,6 +14,8 @@ type VerficationData struct {
 	Razorpay_order_id   string `json:"razorpay_order_id"`
 	Razorpay_signature  string `json:"razorpay_signature"`
 	Order_id            string `json:"order_id"`
+	Name                string `json:"name" bson:"name"`
+	Amount              int64  `json:"amount" bson:"amount"`
 }
 
 type User struct {
@@ -19,4 +23,10 @@ type User struct {
 	Id        int    `json:"id"`
 	Title     string `json:"title"`
 	Completed bool   `json:"completed"`
+}
+
+type Donator struct {
+	Name   string    `json:"name" bson:"name"`
+	Amount int64     `json:"amount" bson:"amount"`
+	Time   time.Time `json:"time" bson:"time"`
 }
